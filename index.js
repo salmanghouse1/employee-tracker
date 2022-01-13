@@ -9,13 +9,13 @@ function init() {
             type: 'list',
             message: 'Choose an option',
             choices: ['view all departments', 'view all roles', 'view all employees', 'add a department', 'add a role', 'add an employee', 'update an employee role'],
-            name: initialPrompt
+            name: "initialPrompt"
         }]
 
 
     ).then((data) => {
         if (data.initialPrompt === 'view all departments') {
-
+            console.log('Selected Departments')
         } else if (data.initialPrompt === 'view all roles') {
 
         } else if (data.initialPrompt === 'view all employees') {
