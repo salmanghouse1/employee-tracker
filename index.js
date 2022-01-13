@@ -5,6 +5,8 @@ const { isMapIterator } = require('util/types');
 
 function init() {
 
+
+
     inquirer.prompt([{
             type: 'list',
             message: 'Choose an option',
@@ -15,17 +17,17 @@ function init() {
 
     ).then((data) => {
         if (data.initialPrompt === 'view all departments') {
-            console.log('Selected Departments')
+            console.log('loading all Departments')
         } else if (data.initialPrompt === 'view all roles') {
-
+            console.log('Viewing all roles')
         } else if (data.initialPrompt === 'view all employees') {
-
+            console.log('Viewing all employees')
         } else if (data.initialPrompt === 'add a department') {
-
+            console.log('add a department')
         } else if (data.initialPrompt === 'add an employee') {
-
+            console.log('add an employee')
         } else if (data.initialPrompt === 'update an employee role') {
-
+            console.log('update an employee role')
         }
     })
 }
