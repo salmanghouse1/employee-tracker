@@ -1,9 +1,36 @@
 var inquirer = require('inquirer');
 const { isMapIterator } = require('util/types');
+const mysql = require('mysql2');
+
+// connect to db
+
+// Connect to database
+
+async function main() {
+    // get the client
+    const mysql = require('mysql2/promise');
+    // create the connection
+    const connection = await mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'root',
+        database: 'employee_tracker_database'
+    });
+    // query database
+    const [rows, fields] = await connection.execute('SELECT * FROM department');
+
+    console.table([rows, fields]);
+    init(connection);
+}
+
+
+
+
 
 // initial prompt
 
-function init() {
+function init(db) {
+
 
 
 
@@ -18,6 +45,10 @@ function init() {
     ).then((data) => {
         if (data.initialPrompt === 'view all departments') {
             console.log('loading all Departments')
+
+            db.query("SELECT * FROM department", function(results) {
+                console.log(results)
+            });
         } else if (data.initialPrompt === 'view all roles') {
             console.log('Viewing all roles')
         } else if (data.initialPrompt === 'view all employees') {
@@ -32,5 +63,4 @@ function init() {
     })
 }
 
-
-init();
+main();
