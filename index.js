@@ -1,27 +1,16 @@
 var inquirer = require('inquirer');
 const { isMapIterator } = require('util/types');
-const mysql = require('mysql2');
+const db = require('./db/db');
+
+
+
+require("console.table");
+
+
 
 // connect to db
 
 // Connect to database
-
-async function main() {
-    // get the client
-    const mysql = require('mysql2/promise');
-    // create the connection
-    const connection = await mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: 'root',
-        database: 'employee_tracker_database'
-    });
-    // query database
-    const [rows, fields] = await connection.execute('SELECT * FROM department');
-
-    console.table([rows, fields]);
-    init(connection);
-}
 
 
 
@@ -29,7 +18,7 @@ async function main() {
 
 // initial prompt
 
-function init(db) {
+function init() {
 
 
 
@@ -46,9 +35,12 @@ function init(db) {
         if (data.initialPrompt === 'view all departments') {
             console.log('loading all Departments')
 
-            db.query("SELECT * FROM department", function(results) {
-                console.log(results)
-            });
+            viewAllDepartments();
+            init();
+
+
+
+
         } else if (data.initialPrompt === 'view all roles') {
             console.log('Viewing all roles')
         } else if (data.initialPrompt === 'view all employees') {
@@ -63,4 +55,20 @@ function init(db) {
     })
 }
 
-main();
+db.connect((err) => {
+    if (err) {
+        throw err
+    } else {
+
+        console.log("connected")
+        init();
+
+    }
+})
+
+function viewAllDepartments() {
+    const viewAllDepartmentsVar = db.query(`SELECT * FROM department`, (err, res) => {
+        console.table(res)
+    });
+
+}
