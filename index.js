@@ -3,10 +3,7 @@ const { isMapIterator } = require('util/types');
 const db = require('./db/db');
 
 
-
 require("console.table");
-
-
 
 // connect to db
 
@@ -14,7 +11,7 @@ require("console.table");
 
 
 
-
+var a = '';
 
 // initial prompt
 
@@ -78,8 +75,8 @@ function init() {
                 },
                 {
                     type: 'input',
-                    message: "enter a dept id",
-                    name: 'deptId',
+                    message: "enter a role id",
+                    name: 'roleId',
                     validate: function(deptId) {
                         // Regex mail check (return true if valid mail)
 
@@ -98,56 +95,8 @@ function init() {
                 addARole(data);
             })
         } else if (data.initialPrompt === 'add an employee') {
-            console.log('add an employee');
-            inquirer.prompt([{
-                    type: 'input',
-                    message: "enter a employee first name",
-                    name: 'firstName',
+            addAnEmployee(data);
 
-                }, {
-                    type: 'input',
-                    message: "enter a employee last name",
-                    name: 'lastName',
-
-                }, {
-                    type: 'input',
-                    message: "enter a role id",
-                    name: 'roleId',
-                    validate: function(roleId) {
-                        // Regex mail check (return true if valid mail)
-
-                        let isnum = /^\d+$/.test(roleId);
-                        if (isnum) {
-                            console.log("value accepted")
-                            return true
-
-                        } else {
-                            console.log('must be a number, no commas and no letters or special chars')
-                        }
-                    }
-
-                },
-                {
-                    type: 'input',
-                    message: "enter a manager Id",
-                    name: 'managerId',
-                    validate: function(managerId) {
-                        // Regex mail check (return true if valid mail)
-
-                        let isnum = /^\d+$/.test(managerId);
-                        if (isnum) {
-                            console.log("value accepted")
-                            return true
-
-                        } else {
-                            console.log('must be a number, no commas and no letters or special chars')
-                        }
-                    }
-
-                }
-            ]).then((data) => {
-                addAnEmployee(data);
-            })
         } else if (data.initialPrompt === 'update an employee role') {
             console.log('update an employee role')
             updateAnEmployee();
@@ -201,24 +150,76 @@ function addADepartment(data) {
 
 function addARole(data) {
     db.query(`INSERT INTO roles SET ?`, {
+        id: data.roleId,
         title: data.title,
         salary: data.salary,
-        department_Id: data.deptId
     })
     init();
 }
 
 function addAnEmployee(data) {
-    db.query(`INSERT INTO employee SET ?`, {
-        first_name: data.firstName,
-        last_name: data.lastName,
-        role_id: data.roleId,
-        manager_id: data.managerId
+    db.query(`SELECT * FROM roles`, (err, res) => {
+        console.log(res)
+        const occupationArr = res.map((role) => {
+
+            return role.title;
+        });
+        inquirer.prompt([{
+                type: 'input',
+                message: "enter a employee first name",
+                name: 'firstName',
+
+            }, {
+                type: 'input',
+                message: "enter a employee last name",
+                name: 'lastName',
+
+            }, {
+                type: 'list',
+                choices: occupationArr,
+                message: "enter a role",
+                name: 'role',
+            }
+
+            , {
+                type: 'input',
+                message: "enter a manager",
+                name: 'managerId',
+                validate: function(managerId) {
+                    // Regex mail check (return true if valid mail)
+
+                    let isnum = /^\d+$/.test(managerId);
+                    if (isnum) {
+                        console.log("value accepted")
+                        return true
+
+                    } else {
+                        console.log('must be a number, no commas and no letters or special chars')
+                    }
+
+
+                }
+
+
+
+            }
+
+        ]).then((data) => {
+            db.query(`INSERT INTO employee SET ?`, {
+                first_name: data.firstName,
+                last_name: data.lastName,
+                role_id: data.roleId,
+                manager_id: data.managerId
+
+            });
+            init();
+        })
+
+
+
 
     })
-    init();
 }
-
 // UPDATE demo SET name=CASE 
 // WHEN id = 2 THEN 'text 2'
 // WHEN id = 3 THEN 'text 3'
@@ -226,17 +227,52 @@ function addAnEmployee(data) {
 
 
 function updateAnEmployee() {
-    db.query(`SELECT first_name, last_name FROM employee`, (err, res) => {
 
 
 
+
+
+    db.query(`SELECT id,first_name, last_name FROM employee && SELECT title FROM roles`, (err, res) => {
+
+        const employeeId = res.map((employee) => {
+            return employee.id
+        });
+
+        const rolesChoices = res.map((roles) => {
+            return roles.title
+        });
+
+        console.log(rolesChoices)
 
         inquirer.prompt([{
-            choices: res,
-            message: "Choose an employee",
-            type: "list",
-            name: 'updateEmployeeRole'
-        }])
+                    choices: employeeId,
+                    message: "Choose an employee by id(if you dont know the name select view employees in prompt)",
+                    type: "list",
+                    name: 'id3'
+                }, {
+                    name: 'roleChoice',
+                    choices: rolesChoices,
+                    message: "Choose a role",
+                    type: "list",
 
+                }
+
+            ]).then((data) => {
+
+                db.query(`UPDATE roles SET title=${data.roleChoice} WHERE id=${data.id3}`)
+                console.log("updated");
+                init();
+
+
+            })
+            // WHEN id = 2 THEN 'text 2'
+            // WHEN id = 3 THEN 'text 3'
+            // END WHERE id IN(2, 3);
     })
+
+
+}
+
+function getJobTitles() {
+
 }

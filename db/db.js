@@ -7,6 +7,7 @@ const connection = mysql.createConnection({
     user: 'root',
     password: 'root',
     database: 'employee_tracker_database'
+
 });
 // query database
 // const [rows, fields] = await connection.execute('SELECT * FROM department');
