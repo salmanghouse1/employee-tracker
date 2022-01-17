@@ -1,3 +1,20 @@
+# README
+
+## Description
+
+
+## Preview
+
+[part1](https://youtu.be/6xXXYBp2vTg)
+
+
+[part2](https://youtu.be/sJ5BA1pwj1w)
+
+An app that tracks employees, updates, create, info
+
+AS A business owner
+I WANT to be able to view and manage the departments, roles, and employees in my company
+SO THAT I can organize and plan my business
 
 GIVEN a command-line application that accepts user input
 WHEN I start the application
@@ -16,3 +33,13 @@ WHEN I choose to add an employee
 THEN I am prompted to enter the employee’s first name, last name, role, and manager, and that employee is added to the database
 WHEN I choose to update an employee role
 THEN I am prompted to select an employee to update and their new role and this information is updated in the database
+
+# made by
+
+[salman ghouse](www.salmanwebdeveloper.com)
+
+
+[github](github.com/salmanghouse1)
+
+
+[email](mailto:salmanghouse1@gmail.com)

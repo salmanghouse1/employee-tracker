@@ -183,7 +183,7 @@ function addAnEmployee(data) {
 
             , {
                 type: 'input',
-                message: "enter a manager",
+                message: "enter a manager id",
                 name: 'managerId',
                 validate: function(managerId) {
                     // Regex mail check (return true if valid mail)
@@ -237,7 +237,7 @@ function updateAnEmployee() {
 
         db.query(`select title,id from roles`, (role_err, role_res) => {
             const rolesChoices = role_res.map((roles) => {
-                return roles.title
+                return roles.id
             });
 
             inquirer.prompt([{
@@ -255,7 +255,7 @@ function updateAnEmployee() {
 
                 ]).then((data) => {
 
-                    db.query(`UPDATE roles SET title=${data.roleChoice} WHERE id=${data.id3}`)
+                    db.query(`UPDATE employee SET id=${data.roleChoice} WHERE role_id=${data.id3}`)
                     console.log("updated");
                     init();
 
