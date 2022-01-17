@@ -229,48 +229,48 @@ function addAnEmployee(data) {
 function updateAnEmployee() {
 
 
-
-
-
-    db.query(`SELECT id,first_name, last_name FROM employee && SELECT title FROM roles`, (err, res) => {
+    db.query(`SELECT id,first_name, last_name FROM employee`, (err, res) => {
 
         const employeeId = res.map((employee) => {
             return employee.id
         });
 
-        const rolesChoices = res.map((roles) => {
-            return roles.title
-        });
+        db.query(`select title,role_id from roles`, (role_err, role_res) => {
+            const rolesChoices = res.map((roles) => {
+                return roles.title
+            });
 
-        console.log(rolesChoices)
+            inquirer.prompt([{
+                        choices: employeeId,
+                        message: "Choose an employee by id(if you dont know the name select view employees in prompt)",
+                        type: "list",
+                        name: 'id3'
+                    }, {
+                        name: 'roleChoice',
+                        choices: rolesChoices,
+                        message: "Choose a role",
+                        type: "list",
 
-        inquirer.prompt([{
-                    choices: employeeId,
-                    message: "Choose an employee by id(if you dont know the name select view employees in prompt)",
-                    type: "list",
-                    name: 'id3'
-                }, {
-                    name: 'roleChoice',
-                    choices: rolesChoices,
-                    message: "Choose a role",
-                    type: "list",
+                    }
 
-                }
+                ]).then((data) => {
 
-            ]).then((data) => {
-
-                db.query(`UPDATE roles SET title=${data.roleChoice} WHERE id=${data.id3}`)
-                console.log("updated");
-                init();
+                    db.query(`UPDATE roles SET title=${data.roleChoice} WHERE id=${data.id3}`)
+                    console.log("updated");
+                    init();
 
 
-            })
+                })
+                //
+
             // WHEN id = 2 THEN 'text 2'
             // WHEN id = 3 THEN 'text 3'
             // END WHERE id IN(2, 3);
+        })
+
+
+
     })
-
-
 }
 
 function getJobTitles() {
