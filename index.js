@@ -236,7 +236,7 @@ function updateAnEmployee() {
         });
 
         db.query(`select title,role_id from roles`, (role_err, role_res) => {
-            const rolesChoices = res.map((roles) => {
+            const rolesChoices = role_res.map((roles) => {
                 return roles.title
             });
 
