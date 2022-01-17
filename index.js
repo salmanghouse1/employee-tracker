@@ -150,6 +150,7 @@ function init() {
             })
         } else if (data.initialPrompt === 'update an employee role') {
             console.log('update an employee role')
+            updateAnEmployee();
         }
     })
 }
@@ -225,8 +226,17 @@ function addAnEmployee(data) {
 
 
 function updateAnEmployee() {
-    db.query(`SELECT first_name last_name FROM employee`, (err, res) => {
+    db.query(`SELECT first_name, last_name FROM employee`, (err, res) => {
 
-            inquirer.prompt()
-        }
-    }
+
+
+
+        inquirer.prompt([{
+            choices: res,
+            message: "Choose an employee",
+            type: "list",
+            name: 'updateEmployeeRole'
+        }])
+
+    })
+}
